@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastAPI Learning Progress Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .week {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .progress {
+            font-weight: bold;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        label {
+            cursor: pointer;
+        }
+        #overall-progress {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>FastAPI Learning Progress Tracker</h1>
+    <div id="tracker"></div>
+    <div id="overall-progress"></div>
+
+    <script>
+        const learningPath = [
+            {
+                title: "Week 1-2: Python and API Foundations",
+                tasks: [
+                    "Review Python basics",
+                    "Learn HTTP methods, status codes, and RESTful API concepts",
+                    "Introduction to asynchronous programming in Python",
+                    "FastAPI basics: installation and 'Hello World' API"
+                ]
+            },
+            {
+                title: "Week 3-4: Core FastAPI Concepts",
+                tasks: [
+                    "Pydantic for data validation and settings management",
+                    "Path parameters, query parameters, and request bodies",
+                    "Response models and status codes",
+                    "Dependency Injection in FastAPI"
+                ]
+            },
+            {
+                title: "Week 5-6: Database Integration and CRUD Operations",
+                tasks: [
+                    "SQL basics",
+                    "Working with databases using SQLAlchemy Core and FastAPI",
+                    "Implementing CRUD operations",
+                    "Migrations with Alembic"
+                ]
+            },
+            {
+                title: "Week 7-8: Authentication and Security",
+                tasks: [
+                    "Implementing JWT authentication in FastAPI",
+                    "Role-based access control",
+                    "Security best practices (CORS, HTTPS)",
+                    "OAuth2 with FastAPI"
+                ]
+            },
+            {
+                title: "Week 9-10: Advanced FastAPI Features",
+                tasks: [
+                    "Background tasks and WebSockets",
+                    "FastAPI applications structure and larger projects",
+                    "Middleware in FastAPI",
+                    "Caching strategies"
+                ]
+            },
+            {
+                title: "Week 11-12: Testing, Documentation, and Deployment",
+                tasks: [
+                    "Testing FastAPI applications (unit and integration tests)",
+                    "Automatic API documentation with Swagger/OpenAPI",
+                    "Deploying FastAPI applications"
+                ]
+            }
+        ];
+
+        function createTracker() {
+            const tracker = document.getElementById('tracker');
+            learningPath.forEach((week, weekIndex) => {
+                const weekElement = document.createElement('div');
+                weekElement.className = 'week';
+                weekElement.innerHTML = `
+                    <div class="week-header">
+                        <h2>${week.title}</h2>
+                        <span class="progress">Progress: <span id="progress-${weekIndex}">0</span>/${week.tasks.length}</span>
+                    </div>
+                    <ul id="week-${weekIndex}"></ul>
+                `;
+                tracker.appendChild(weekElement);
+
+                const ul = document.getElementById(`week-${weekIndex}`);
+                week.tasks.forEach((task, taskIndex) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <input type="checkbox" id="task-${weekIndex}-${taskIndex}" onchange="updateProgress()">
+                        <label for="task-${weekIndex}-${taskIndex}">${task}</label>
+                    `;
+                    ul.appendChild(li);
+                });
+            });
+        }
+
+        function updateProgress() {
+            let totalTasks = 0;
+            let completedTasks = 0;
+
+            learningPath.forEach((week, weekIndex) => {
+                let weekCompleted = 0;
+                week.tasks.forEach((_, taskIndex) => {
+                    const checkbox = document.getElementById(`task-${weekIndex}-${taskIndex}`);
+                    if (checkbox.checked) {
+                        weekCompleted++;
+                        completedTasks++;
+                    }
+                    totalTasks++;
+                });
+                document.getElementById(`progress-${weekIndex}`).textContent = weekCompleted;
+            });
+
+            const overallProgress = document.getElementById('overall-progress');
+            const percentage = Math.round((completedTasks / totalTasks) * 100);
+            overallProgress.textContent = `Overall Progress: ${completedTasks}/${totalTasks} (${percentage}%)`;
+        }
+
+        createTracker();
+        updateProgress();
+    </script>
+</body>
+</html>
